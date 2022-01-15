@@ -1,4 +1,4 @@
-GET http://localhost:8080/api/querydsl?size=10&page=1
+GET http://localhost:8080/api/querydsl?size=10&page=0
 Accept: application/json
 
 ###
