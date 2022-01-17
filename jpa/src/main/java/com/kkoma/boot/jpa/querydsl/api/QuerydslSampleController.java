@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -20,12 +21,14 @@ public class QuerydslSampleController {
 
     @GetMapping(path = "/api/querydsl")
     public ResponseEntity getSample (
-            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable ) {
+            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
+            @RequestParam(value = "name") String name) {
 
         log.info("page: {}", pageable);
-        Page<SampleEntity> sampleEntities = sampleService.getSamples(pageable);
+        Page<SampleEntity> sampleEntities = sampleService.findByName(pageable, name);
 
         return ResponseEntity.ok()
                 .body(sampleEntities);
     }
+
 }

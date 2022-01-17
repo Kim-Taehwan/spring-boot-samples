@@ -1,4 +1,4 @@
-GET http://localhost:8080/api/querydsl?size=10&page=0
+GET http://localhost:8080/api/querydsl?size=2&page=0&name=차승원
 Accept: application/json
 
 ###
