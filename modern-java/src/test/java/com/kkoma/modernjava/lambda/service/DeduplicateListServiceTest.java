@@ -6,9 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
@@ -17,17 +15,16 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
-@SpringBootTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ExtendWith(SpringExtension.class)
 public class DeduplicateListServiceTest {
 
-    List<OrderCancel> orderCancels = new ArrayList<>();
+    static List<OrderCancel> orderCancels = new ArrayList<>();
 
     @BeforeAll
-    public void beforeAll() {
+    public static void beforeAll() {
         OrderCancel orderCancel1 = OrderCancel.all()
                 .orderId(1L)
                 .reason("Good")
@@ -50,7 +47,7 @@ public class DeduplicateListServiceTest {
     public void deduplicateList() {
         List<OrderCancel> orderCancelList = StreamUtil.deduplicate(orderCancels, OrderCancel::getOrderId);
 
-        assertEquals(1, orderCancelList.size());
+        assertEquals(2, orderCancelList.size());
     }
 
     @Test
