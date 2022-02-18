@@ -2,7 +2,6 @@
 *.class
 .idea
 .idea/httpRequests/**
-
 # Log file
 *.log
 
