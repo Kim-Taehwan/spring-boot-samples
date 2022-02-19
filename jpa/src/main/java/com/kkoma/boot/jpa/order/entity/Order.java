@@ -13,8 +13,6 @@ import java.util.Date;
 @Table(name = "ORDERS")
 public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ORDERS_SEQ_GENERATOR")
-    @SequenceGenerator(name = "ORDERS_SEQ_GENERATOR", allocationSize = 1, sequenceName = "ORDERS_SEQ")
     private Long id;
     private Long userId;
     private int status;
