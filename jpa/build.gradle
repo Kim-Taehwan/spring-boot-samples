@@ -47,7 +47,7 @@ dependencies {
 
     // JDBC
     implementation 'org.flywaydb:flyway-core:8.4.1'
-    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'com.h2database:h2:1.4.199'
 
     // utils
     implementation('org.apache.commons:commons-lang3:3.12.0')
