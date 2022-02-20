@@ -34,8 +34,12 @@ dependencyManagement {
 dependencies {
     // Spring Boot
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation('org.springframework.boot:spring-boot-starter-actuator')
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // JPA - hibernate
+    implementation('org.hibernate:hibernate-core:5.6.5.Final')
 
     // json
     implementation('com.fasterxml.jackson.core:jackson-core:2.13.1')
@@ -44,6 +48,10 @@ dependencies {
 
     // model mapper & convert
     implementation('org.modelmapper:modelmapper:2.4.5')
+
+    // JDBC - AWS Secrets Manager JDBC
+    runtimeOnly('com.amazonaws.secretsmanager:aws-secretsmanager-jdbc:1.0.6')
+    runtimeOnly('mysql:mysql:connector-java:8.0.25')
 
     // logger
     implementation('net.logstash.logback:logstash-logback-encoder')
