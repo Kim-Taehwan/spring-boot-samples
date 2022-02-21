@@ -1,0 +1,73 @@
+buildscript {
+    ext {
+        queryDslVersion = "5.0.0"
+    }
+}
+
+plugins {
+    id 'org.springframework.boot' version '2.6.3'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Spring Boot
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation('org.springframework.boot:spring-boot-starter-actuator')
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // JPA - hibernate
+    implementation('org.hibernate:hibernate-core:5.6.5.Final')
+
+    // json
+    implementation('com.fasterxml.jackson.core:jackson-core:2.13.1')
+    implementation('com.fasterxml.jackson.core:jackson-annotations:2.13.1')
+    implementation('com.fasterxml.jackson.core:jackson-databind:2.13.1')
+
+    // JDBC - AWS Secrets Manager JDBC
+    runtimeOnly('com.amazonaws.secretsmanager:aws-secretsmanager-jdbc:1.0.6')
+    runtimeOnly('mysql:mysql:connector-java:8.0.25')
+    implementation 'org.flywaydb:flyway-core:8.4.1'
+    // H2
+    runtimeOnly 'com.h2database:h2:1.4.199'
+
+    // utils
+    implementation('org.apache.commons:commons-lang3:3.12.0')
+    implementation('org.apache.commons:commons-collections4:4.4')
+
+    // Querydsl
+    implementation('com.querydsl:querydsl-jpa')
+    annotationProcessor(
+            "javax.persistence:javax.persistence-api",
+            "javax.annotation:javax.annotation-api",
+            "com.querydsl:querydsl-apt:${queryDslVersion}:jpa"
+    )
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// clean 태스크와 cleanGeneatedDir 태스크 중 취향에 따라서 선택하세요.
+/** clean 태스크 실행시 QClass 삭제 */
+clean {
+    delete file('src/main/generated') // 인텔리제이 Annotation processor 생성물 생성위치
+}
