@@ -82,6 +82,11 @@ dependencies {
     )
 }
 
+test {
+    useJUnitPlatform()
+}
+
+// querydsl
 sourceSets {
     main {
         java {
@@ -93,6 +98,3 @@ sourceSets {
     }
 }
 
-test {
-    useJUnitPlatform()
-}
