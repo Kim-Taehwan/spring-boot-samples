@@ -1,6 +1,8 @@
 package com.example.querydsl.entity;
 
 import com.querydsl.core.QueryResults;
+import com.querydsl.core.Tuple;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,12 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
 import javax.transaction.Transactional;
 
 import java.util.List;
 
 import static com.example.querydsl.entity.QMember.*;
 import static com.example.querydsl.entity.QMember.member;
+import static com.example.querydsl.entity.QTeam.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
@@ -149,5 +154,145 @@ public class MemberTest {
                 .fetch();
 
         log.info("fetch: {}", fetch.size());
+    }
+
+    @Test
+    @DisplayName("집합")
+    public void grouping() {
+        final List<Tuple> fetch = queryFactory
+                .select(
+                        member.count(),
+                        member.age.sum(),
+                        member.age.avg(),
+                        member.age.max(),
+                        member.age.min()
+                )
+                .from(member)
+                .fetch();
+
+        Tuple tuple = fetch.get(0);
+        log.info("tuple: {}", tuple.toString());
+        assertThat(tuple.get(member.count())).isEqualTo(7);
+        assertThat(tuple.get(member.age.sum())).isEqualTo(130);
+        assertThat(tuple.get(member.age.avg())).isEqualTo(18.0);
+        assertThat(tuple.get(member.age.max())).isEqualTo(20);
+        assertThat(tuple.get(member.age.min())).isEqualTo(10);
+    }
+
+    @Test
+    @DisplayName("팀의 이름과 각 팀의 평균 연령을 구해라.")
+    public void groupby() throws Exception {
+        final List<Tuple> fetch = queryFactory
+                .select(
+                        team.name,
+                        member.age.avg()
+                )
+                .from(member)
+                .join(member.team, team)
+                .groupBy(team.name)
+                .fetch();
+
+        Tuple teamA = fetch.get(0);
+        Tuple teamB = fetch.get(1);
+
+        log.info("teamA: {}", teamA);
+        log.info("teamB: {}", teamB);
+
+        assertThat(teamA.get(team.name)).isEqualTo("teamA");
+        assertThat(teamB.get(team.name)).isEqualTo("teamB");
+    }
+
+    @Test
+    @DisplayName("팀 A 에 소속된 모든 회")
+    public void joinBasic() throws Exception {
+        final List<Member> teamA = queryFactory
+                .selectFrom(member)
+                .leftJoin(member.team, team)
+                .where(team.name.eq("teamA"))
+                .fetch();
+
+        log.info("teamA: {}", teamA.toString());
+
+        assertThat(teamA)
+                .extracting("username")
+                .containsExactly("member1", "member2");
+    }
+
+    @Test
+    @DisplayName("회원과 팀을 조인하면서, 팀 이름이 teamA인 팀만 조인, 회원은 모두 조회")
+    public void join_on_filtering() throws Exception {
+        final List<Tuple> result = queryFactory
+                .select(member, team)
+                .from(member)
+                .leftJoin(member.team, team).on(team.name.eq("teamA"))
+                .fetch();
+
+        log.info("result: {}", result.toString());
+    }
+
+    @Test
+    @DisplayName("연관관계 없는 엔티티 외부 조인")
+    public void join_on_no_relation() throws Exception {
+        final List<Tuple> result = queryFactory
+                .select(member, team)
+                .from(member)
+                .leftJoin(team).on(member.username.eq(team.name))
+                .fetch();
+
+        for (Tuple tuple : result) {
+            log.info("tuple = " + tuple);
+        }
+    }
+
+    // EntityManagerFactory
+    @PersistenceUnit
+    EntityManagerFactory emf;
+
+    @Test
+    public void fetchJoinNo() {
+        em.flush();
+        em.clear();
+
+        final Member findMember = queryFactory
+                .selectFrom(member)
+                .where(member.username.eq("member1"))
+                .fetchOne();
+
+        // findMember.getTeam() 가 이미 로딩된 것인지 알 수 있음. 로딩 됐으면, true
+        boolean loaded = emf.getPersistenceUnitUtil().isLoaded(findMember.getTeam());
+        assertThat(loaded).as("fetch 조인 미적용").isFalse();
+    }
+
+    @Test
+    public void fetchJoinYes() throws Exception {
+        em.flush();
+        em.clear();
+
+        final Member findMember = queryFactory
+                .selectFrom(member)
+                .join(member.team, team).fetchJoin()
+                .where(member.username.eq("member1"))
+                .fetchOne();
+
+        // findMember.getTeam() 가 이미 로딩된 것인지 알 수 있음. 로딩 됐으면, true
+        boolean loaded = emf.getPersistenceUnitUtil().isLoaded(findMember.getTeam());
+        assertThat(loaded).as("fetch 조인 미적용").isFalse();
+    }
+
+    @Test
+    @DisplayName("나이가 가장 많은 회원 조회")
+    public void subQuery() {
+        QMember memberSub = new QMember("memberSub");
+
+        final List<Member> result = queryFactory
+                .selectFrom(member)
+                .where(member.age.eq(
+                        JPAExpressions.select(memberSub.age.max())
+                                .from(memberSub)
+                ))
+                .fetch();
+
+        assertThat(result).extracting("age")
+                .containsExactly(40);
     }
 }
