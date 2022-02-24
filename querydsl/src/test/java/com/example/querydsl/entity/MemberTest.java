@@ -2,6 +2,9 @@ package com.example.querydsl.entity;
 
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -45,8 +48,8 @@ public class MemberTest {
         Member member1 = new Member(1L, "member1", 20, teamA );
         Member member2 = new Member(2L, "member2", 10, teamA );
         Member member3 = new Member(3L, "member3", 20, teamB );
-        Member member4 = new Member(4L, "member4", 20, teamB );
-        Member member5 = new Member(5L, null, 20, teamB );
+        Member member4 = new Member(4L, "member4", 10, teamB );
+        Member member5 = new Member(5L, null, 10, teamB );
         Member member6 = new Member(6L, "member6", 20, teamB );
         Member member7 = new Member(7L, "member7", 20, teamB );
 
@@ -294,5 +297,61 @@ public class MemberTest {
 
         assertThat(result).extracting("age")
                 .containsExactly(40);
+    }
+
+    @Test
+    public void basicCase() throws Exception {
+        final List<String> result = queryFactory
+                .select(member.age
+                        .when(10).then("열살")
+                        .when(20).then("스무살")
+                        .otherwise("ETC"))
+                .from(member)
+                .fetch();
+
+        for (String s : result) {
+            log.info("s = {}", s);
+        }
+    }
+
+    @Test
+    public void complexCase() throws Exception {
+        final List<String> result = queryFactory
+                .select(new CaseBuilder()
+                        .when(member.age.between(0, 10)).then("0~20살")
+                        .when(member.age.between(11, 20)).then("11~20살")
+                        .otherwise("기타")
+                )
+                .from(member)
+                .fetch();
+
+        for (String s : result) {
+            log.info("s = {}", s);
+        }
+    }
+
+    @Test
+    public void constant() throws Exception {
+        final List<Tuple> result = queryFactory
+                .select(member.username, Expressions.constant("A"))
+                .from(member)
+                .fetch();
+
+        for (Tuple tuple : result) {
+            log.info("tuple: {}", tuple);
+        }
+    }
+
+    @Test
+    public void concat() throws Exception {
+        final List<String> result = queryFactory
+                .select(member.username.concat("_").concat(member.age.stringValue()))
+                .from(member)
+                .where(member.username.eq("mamber1"))
+                .fetch();
+
+        for (String s : result) {
+            log.info("s: {} ", s);
+        }
     }
 }
