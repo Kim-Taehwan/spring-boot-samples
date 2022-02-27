@@ -20,3 +20,64 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+task hello {
+    doLast {
+        println 'Hello world!'
+    }
+}
+
+task upper {
+    doLast {
+        String someString = 'mY_nAmE'
+        println "Original: $someString"
+        println "Upper case: ${someString.toUpperCase()}"
+    }
+}
+
+task count {
+    doLast {
+        4.times {print "$it"}
+    }
+}
+
+task intro {
+    dependsOn hello
+    doLast {
+        println "i'm Gradle"
+    }
+}
+
+4.times {counter ->
+    task "task$counter" {
+        doLast {
+            println "I'm task number $counter"
+        }
+    }
+}
+
+hello.doFirst {
+    println 'Hello First'
+}
+
+hello.configure {
+    doLast {
+        println 'Hello configure'
+    }
+}
+
+hello.configure {
+    doLast {
+        println 'Hello configure222'
+    }
+}
+
+task myTask {
+    ext.myProperty = 'myValue'
+}
+
+task printTaskProperties {
+    doLast {
+        println myTask.myProperty
+    }
+}
