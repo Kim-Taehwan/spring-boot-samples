@@ -9,8 +9,8 @@ import javax.persistence.Table;
 
 @ToString
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 @Entity
 @Table(name = "TEAM")
 public class Team {
