@@ -1,5 +1,8 @@
 package com.example.querydsl.entity;
 
+import com.example.querydsl.dto.MemberSearchCondition;
+import com.example.querydsl.dto.MemberTeamDto;
+import com.example.querydsl.repository.MemberJpaRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +27,9 @@ public class Study4Test {
     EntityManager em;
     JPAQueryFactory queryFactory;
 
+    @Autowired
+    MemberJpaRepository memberJpaRepository;
+
     @BeforeEach
     public void beforeEach() {
         queryFactory = new JPAQueryFactory(em);
@@ -39,8 +45,8 @@ public class Study4Test {
         Member member3 = new Member(3L, "member3", 20, teamB );
         Member member4 = new Member(4L, "member4", 10, teamB );
         Member member5 = new Member(5L, null, 10, teamB );
-        Member member6 = new Member(6L, "member6", 20, teamB );
-        Member member7 = new Member(7L, "member7", 20, teamB );
+        Member member6 = new Member(6L, "member6", 30, teamB );
+        Member member7 = new Member(7L, "member7", 40, teamB );
 
         em.persist(member1);
         em.persist(member2);
@@ -62,6 +68,20 @@ public class Study4Test {
 
         for (Member member1 : result) {
             log.info("result: {}", member1.getTeam().getName());
+        }
+    }
+
+    @Test
+    public void searchTest() throws Exception {
+        MemberSearchCondition condition = new MemberSearchCondition();
+        condition.setAgeGoe(35);
+        condition.setAgeGoe(40);
+        condition.setTeamName("teamB");
+
+        List<MemberTeamDto> result = memberJpaRepository.searchByBuilder(condition);
+
+        for (MemberTeamDto memberTeamDto : result) {
+            log.info("memberTeamDto: {}", memberTeamDto.toString());
         }
     }
 }
