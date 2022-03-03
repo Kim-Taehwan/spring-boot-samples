@@ -17,6 +17,7 @@ import java.util.List;
 
 import static com.example.querydsl.entity.QMember.member;
 import static com.example.querydsl.entity.QTeam.team;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 @SpringBootTest
@@ -84,4 +85,19 @@ public class Study4Test {
             log.info("memberTeamDto: {}", memberTeamDto.toString());
         }
     }
+
+    @Test
+    public void searchTest2() throws Exception {
+        MemberSearchCondition condition = new MemberSearchCondition();
+        condition.setAgeGoe(35);
+        condition.setAgeGoe(40);
+        condition.setTeamName("teamB");
+
+        final List<MemberTeamDto> search = memberJpaRepository.search(condition);
+        for (MemberTeamDto memberTeamDto : search) {
+            log.info("memberTeamDto: {}", memberTeamDto);
+        }
+        assertThat(search).extracting("username").containsExactly("member7");
+    }
+
 }
