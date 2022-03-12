@@ -6,3 +6,9 @@ GET http://localhost:8080/v1/members?teamName=teamB&ageGoe=31&ageLoe=35
 Accept: application/json
 
 ###
+GET http://localhost:8080/v2/members?page=3&size=5
+Accept: application/json
+
+###
+GET http://localhost:8080/v3/members?page=2&size=5
+Accept: application/json
