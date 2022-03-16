@@ -3,6 +3,7 @@ package com.example.querydsl.repository;
 import com.example.querydsl.dto.MemberSearchCondition;
 import com.example.querydsl.dto.MemberTeamDto;
 import com.example.querydsl.entity.Member;
+import com.example.querydsl.entity.QMember;
 import com.example.querydsl.entity.Team;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -75,6 +76,19 @@ public class MemberRepositoryImplTest {
 
         for (MemberTeamDto memberTeamDto : results) {
             log.info("memberTeamDto: {}", memberTeamDto.toString());
+        }
+    }
+
+    @Test
+    public void querydslPredicateExecutorTest() {
+        final QMember member = QMember.member;
+        final Iterable<Member> result = memberRepository.findAll(
+                member.age.between(20, 40)
+                        .and(member.username.eq("member1"))
+        );
+
+        for (Member findMember : result) {
+            log.info("member: {}", findMember);
         }
     }
 }
