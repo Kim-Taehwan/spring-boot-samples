@@ -17,31 +17,25 @@ import static org.junit.jupiter.api.Assertions.*;
 @Slf4j
 @SpringBootTest
 class SlackSendServiceTest {
-    // ACCESS_TOKEN: xoxe.xoxp-1-Mi0yLTE1ODU5NTA4ODAzOS0yNzM3MzE2NTEzNTQwLTMyNTQ5MTM1MTM4MTItMzI0OTY4MjE4MTgyOS04OTJmNDNkM2MxZTI1NjQ2Mzc4NTRhMWJkMzdhNTdmZTZmODQ5NThlM2IyZTI3OWJmODA4NjRlMmY3Mjc2MzAw
-    // REFRESH_TOKEN: xoxe-1-My0xLTE1ODU5NTA4ODAzOS0zMjU0OTEzNTEzODEyLTMyNTI1NzQwNzAwNTAtNWExOWVhNzQxYTVlMTZkNzE3NTYyOGViZDAzMjJmZTIyMWYyOGIxNTkxOTNjOGM3MWRmOTZlYTI0NTc1MTU2ZQ
 
-    private final String ACCESS_TOKEN = "xoxe.xoxp-1-Mi0yLTE1ODU5NTA4ODAzOS0yNzM3MzE2NTEzNTQwLTMyNTQ5MTM1MTM4MTItMzI0OTY4MjE4MTgyOS04OTJmNDNkM2MxZTI1NjQ2Mzc4NTRhMWJkMzdhNTdmZTZmODQ5NThlM2IyZTI3OWJmODA4NjRlMmY3Mjc2MzAw";
-    private final String REFRESH_TOKEN = "xoxe-1-My0xLTE1ODU5NTA4ODAzOS0zMjU0OTEzNTEzODEyLTMyNTI1NzQwNzAwNTAtNWExOWVhNzQxYTVlMTZkNzE3NTYyOGViZDAzMjJmZTIyMWYyOGIxNTkxOTNjOGM3MWRmOTZlYTI0NTc1MTU2ZQ";
-    private final String SLACK_TOKEN = "xoxb-158595088039-2125501385222-57WwvxaphwIPvd3RoHz9Ttxj";
-//    private final String SLACK_WEBHOOKS_URL_DAVE = "https://hooks.slack.com/services/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";
-    private final String SLACK_WEBHOOKS_URL_DAVE = "https://hooks.slack.com/services/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";
-    private final String SLACK_WEBHOOKS_URL = "https://hooks.slack.com/services/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";
+    private final String SLACK_WEBHOOKS_URL_DAVE = "";
+    private final String SLACK_WEBHOOKS_URL = "";
     Slack slack = Slack.getInstance();
 
     @Test
     public void sendSlack() throws Exception {
 
-        MethodsClient methods = slack.methods(ACCESS_TOKEN);
-
-        // Build a request object
-        ChatPostMessageRequest request = ChatPostMessageRequest.builder()
-                .channel("데이브_TI_가든")
-                .text("@데이브 TEST")
-                .build();
-
-        // Get a response as a Java object
-        ChatPostMessageResponse response = methods.chatPostMessage(request);
-        log.info("response: {}", response);
+//        MethodsClient methods = slack.methods(ACCESS_TOKEN);
+//
+//        // Build a request object
+//        ChatPostMessageRequest request = ChatPostMessageRequest.builder()
+//                .channel("데이브_TI_가든")
+//                .text("@데이브 TEST")
+//                .build();
+//
+//        // Get a response as a Java object
+//        ChatPostMessageResponse response = methods.chatPostMessage(request);
+//        log.info("response: {}", response);
     }
 
     @Test
