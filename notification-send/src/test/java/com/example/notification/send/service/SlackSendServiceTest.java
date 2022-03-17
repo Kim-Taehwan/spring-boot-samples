@@ -1,5 +1,7 @@
 package com.example.notification.send.service;
 
+import com.example.notification.send.dto.SlackRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.slack.api.Slack;
 import com.slack.api.methods.MethodsClient;
 import com.slack.api.methods.request.chat.ChatPostMessageRequest;
@@ -7,6 +9,7 @@ import com.slack.api.methods.response.chat.ChatPostMessageResponse;
 import com.slack.api.webhook.WebhookResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -18,7 +21,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class SlackSendServiceTest {
 
-    private final String SLACK_WEBHOOKS_URL_DAVE = "";
+    @Autowired
+    private ObjectMapper objectMapper;
+
     private final String SLACK_WEBHOOKS_URL = "";
     Slack slack = Slack.getInstance();
 
@@ -61,12 +66,19 @@ class SlackSendServiceTest {
          * #  us-io-service => us-outlet-md-service 로 변경?
          */
 //        String payload="{\"channel\": \"@데이브_TI_가든\",\"text\": \"테스트 입니다.\n또 테스트 입니다.\", \"username\": \"GARDEN\", \"icon_url\": \"https://slack.com/img/icons/app-57.png\"}"; // channel_not_found ERROR
-        String payload="{\"text\": \"테스트 입니다.\n또 테스트 입니다.\"}";
+//        String payload="{\"channel\": \"\", \"text\": \"테스트 입니다.\n또 테스트 입니다.\"}";
+//        String payload="{\"channel\": \"#ti-garden-team\", \"text\": \"테스트 입니다.\n또 테스트 입니다.\"}";
 //        String payload="{\"channel\": \"#eu-outlet-md-service\", \"text\": \"테스트 입니다..\n또 테스트 입니다.\"}";
 //        String payload="{\"channel\": \"#eu-homeliving-service\", \"text\": \"테스트 입니다..\n또 테스트 입니다.\"}";
 //        String payload="{\"channel\": \"#eu-central-md-service\", \"text\": \"테스트 입니다..\n또 테스트 입니다.\"}";
 
-        WebhookResponse response = slack.send(SLACK_WEBHOOKS_URL_DAVE, payload);
+        SlackRequest slackRequest = SlackRequest.all()
+                .channel("")
+                .text("테스트 입니다.\n또 테스트 입니다.")
+                .build();
+
+        String payload = objectMapper.writeValueAsString(slackRequest);
+        WebhookResponse response = slack.send(SLACK_WEBHOOKS_URL, payload);
 //        WebhookResponse response = slack.send(SLACK_WEBHOOKS_URL, payload);
         log.info("response: {}", response);
     }
