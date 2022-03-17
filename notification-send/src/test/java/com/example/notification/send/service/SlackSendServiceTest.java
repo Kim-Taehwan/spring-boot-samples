@@ -17,16 +17,21 @@ import static org.junit.jupiter.api.Assertions.*;
 @Slf4j
 @SpringBootTest
 class SlackSendServiceTest {
+    // ACCESS_TOKEN: xoxe.xoxp-1-Mi0yLTE1ODU5NTA4ODAzOS0yNzM3MzE2NTEzNTQwLTMyNTQ5MTM1MTM4MTItMzI0OTY4MjE4MTgyOS04OTJmNDNkM2MxZTI1NjQ2Mzc4NTRhMWJkMzdhNTdmZTZmODQ5NThlM2IyZTI3OWJmODA4NjRlMmY3Mjc2MzAw
+    // REFRESH_TOKEN: xoxe-1-My0xLTE1ODU5NTA4ODAzOS0zMjU0OTEzNTEzODEyLTMyNTI1NzQwNzAwNTAtNWExOWVhNzQxYTVlMTZkNzE3NTYyOGViZDAzMjJmZTIyMWYyOGIxNTkxOTNjOGM3MWRmOTZlYTI0NTc1MTU2ZQ
 
+    private final String ACCESS_TOKEN = "xoxe.xoxp-1-Mi0yLTE1ODU5NTA4ODAzOS0yNzM3MzE2NTEzNTQwLTMyNTQ5MTM1MTM4MTItMzI0OTY4MjE4MTgyOS04OTJmNDNkM2MxZTI1NjQ2Mzc4NTRhMWJkMzdhNTdmZTZmODQ5NThlM2IyZTI3OWJmODA4NjRlMmY3Mjc2MzAw";
+    private final String REFRESH_TOKEN = "xoxe-1-My0xLTE1ODU5NTA4ODAzOS0zMjU0OTEzNTEzODEyLTMyNTI1NzQwNzAwNTAtNWExOWVhNzQxYTVlMTZkNzE3NTYyOGViZDAzMjJmZTIyMWYyOGIxNTkxOTNjOGM3MWRmOTZlYTI0NTc1MTU2ZQ";
     private final String SLACK_TOKEN = "xoxb-158595088039-2125501385222-57WwvxaphwIPvd3RoHz9Ttxj";
-    private final String SLACK_WEBHOOKS_URL_DAVE = "https://hooks.slack.com/services/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";
+//    private final String SLACK_WEBHOOKS_URL_DAVE = "https://hooks.slack.com/services/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";
+    private final String SLACK_WEBHOOKS_URL_DAVE = "https://hooks.slack.com/services/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";
     private final String SLACK_WEBHOOKS_URL = "https://hooks.slack.com/services/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";
     Slack slack = Slack.getInstance();
 
     @Test
     public void sendSlack() throws Exception {
 
-        MethodsClient methods = slack.methods(SLACK_TOKEN);
+        MethodsClient methods = slack.methods(ACCESS_TOKEN);
 
         // Build a request object
         ChatPostMessageRequest request = ChatPostMessageRequest.builder()
@@ -62,13 +67,13 @@ class SlackSendServiceTest {
          * #  us-io-service => us-outlet-md-service 로 변경?
          */
 //        String payload="{\"channel\": \"@데이브_TI_가든\",\"text\": \"테스트 입니다.\n또 테스트 입니다.\", \"username\": \"GARDEN\", \"icon_url\": \"https://slack.com/img/icons/app-57.png\"}"; // channel_not_found ERROR
-        String payload="{\"text\": \"테스트 입니다.\n또 테스트 입니다.\", \"username\": \"GARDEN\", \"icon_url\": \"https://slack.com/img/icons/app-57.png\"}";
+        String payload="{\"text\": \"테스트 입니다.\n또 테스트 입니다.\"}";
 //        String payload="{\"channel\": \"#eu-outlet-md-service\", \"text\": \"테스트 입니다..\n또 테스트 입니다.\"}";
 //        String payload="{\"channel\": \"#eu-homeliving-service\", \"text\": \"테스트 입니다..\n또 테스트 입니다.\"}";
 //        String payload="{\"channel\": \"#eu-central-md-service\", \"text\": \"테스트 입니다..\n또 테스트 입니다.\"}";
 
-//        WebhookResponse response = slack.send(SLACK_WEBHOOKS_URL_DAVE, payload);
-        WebhookResponse response = slack.send(SLACK_WEBHOOKS_URL, payload);
+        WebhookResponse response = slack.send(SLACK_WEBHOOKS_URL_DAVE, payload);
+//        WebhookResponse response = slack.send(SLACK_WEBHOOKS_URL, payload);
         log.info("response: {}", response);
     }
 }
