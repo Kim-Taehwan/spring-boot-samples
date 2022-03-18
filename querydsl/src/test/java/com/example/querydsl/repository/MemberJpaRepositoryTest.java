@@ -26,12 +26,15 @@ class MemberJpaRepositoryTest {
 
     @Test
     public void basicTest() throws Exception {
-        Team team = new Team(1L, "teamA");
-        Member member = new Member(1L, "member1", 10, team);
+        Team team = new Team(111L, "teamA");
+        Member member = new Member(111L, "member1", 10, team);
 
         memberJpaRepository.save(member);
 
         Member findMember = memberJpaRepository.findById(member.getId()).get();
+        if (member == findMember) {
+            log.info("true ##########");
+        }
         assertThat(findMember).isEqualTo(member);
 
         List<Member> result1 = memberJpaRepository.findAll();
