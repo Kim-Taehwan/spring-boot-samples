@@ -25,22 +25,23 @@ class SlackSendServiceTest {
     private ObjectMapper objectMapper;
 
     private final String SLACK_WEBHOOKS_URL = "";
+    private final String ACCESS_TOKEN = "";
     Slack slack = Slack.getInstance();
 
     @Test
     public void sendSlack() throws Exception {
 
-//        MethodsClient methods = slack.methods(ACCESS_TOKEN);
-//
-//        // Build a request object
-//        ChatPostMessageRequest request = ChatPostMessageRequest.builder()
-//                .channel("데이브_TI_가든")
-//                .text("@데이브 TEST")
-//                .build();
-//
-//        // Get a response as a Java object
-//        ChatPostMessageResponse response = methods.chatPostMessage(request);
-//        log.info("response: {}", response);
+        MethodsClient methods = slack.methods(ACCESS_TOKEN);
+
+        // Build a request object
+        ChatPostMessageRequest request = ChatPostMessageRequest.builder()
+                .channel("#ti-garden-team")
+                .text("@데이브 TEST")
+                .build();
+
+        // Get a response as a Java object
+        ChatPostMessageResponse response = methods.chatPostMessage(request);
+        log.info("response: {}", response);
     }
 
     @Test

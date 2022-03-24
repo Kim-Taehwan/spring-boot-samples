@@ -1,0 +1,4 @@
+
+redis:
+  host: trenbe-cluster-dev.y7zecc.clustercfg.apn2.cache.amazonaws.com
+  port: 6379
